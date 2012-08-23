@@ -103,7 +103,36 @@ _openssl_engine_id() {
 
 # _openssl_x509_name_options: Complete x509 name options {{{
 _openssl_x509_name_options() {
-  # TODO
+  local sep='sep_comma_plus sep_comma_plus_space sep_semi_plus_space sep_multiline'
+  local fname='nofname sname lname oid'
+
+  _values -s , -w 'name options' \
+    'compat[Use old format (default)]' \
+    'RFC2253[RFC2253 compatible]' \
+    'oneline[Single line format]' \
+    'multiline[Multi line format]' \
+    'esc_2253[Escape special characters: ,+"<>]' \
+    'esc_ctrl[Escape control characters]' \
+    'esc_msb[Escape characters with ASCII value > 127]' \
+    'use_quote[Surround entire string with double quote]' \
+    'utf8[Convert all strings to UTF8]' \
+    'no_type[Dump multibyte characters without conversion]' \
+    'show_type[Precede field content with type of ASN1 string]' \
+    'dump_der[Use DER encoding for hexdump]' \
+    'dump_nostr[dump types which are not character strings]' \
+    'dump_all[dump all fields]' \
+    'dump_unknown[dump any field with unknown OID]' \
+    "($sep)sep_comma_plus[use , and + as separators]" \
+    "($sep)sep_comma_plus_space[use , and + with following space as separators]" \
+    "($sep)sep_semi_plus_space[use ; and + with following space as separators]" \
+    "($sep)sep_multiline[use LF and + as separators]" \
+    'dn_rev[reverse fields of the DN]' \
+    "($fname)nofname[do not display field name]" \
+    "($fname)sname[display short field name]" \
+    "($fname)lname[display long field name]" \
+    "($fname)oid[use numerical OID for field name]" \
+    'align[align field values (only usable with sep_multiline)]' \
+    'space_eq[put spaces around = after field name]'
 }
 #}}}
 
