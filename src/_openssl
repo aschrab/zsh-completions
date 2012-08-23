@@ -142,6 +142,17 @@ _openssl_x509_cert_options() {
 }
 #}}}
 
+# _openssl_req_newkey_options: Complete options for req -newkey {{{
+_openssl_req_newkey_options() {
+  # TODO: Get list of algorithms dynamically
+  _values -S : 'Key options' \
+    'rsa[RSA key]::number of bits:' \
+    'param[Read paramaters from file]:parameter file:_files' \
+    'cmac' \
+    'hmac'
+}
+#}}}
+
 #}}}
 
 # _openssl_digest_command: Default completion for digest subcommands {{{
@@ -191,7 +202,7 @@ _openssl-req() { #{{{
     '-new[Generate a new certificate request]' \
     '-subj[Specify subject of the request]:subject:' \
     '-rand[File for random data]:Random source:_files' \
-    '-newkey[Create a new private key and request]:key spec:' \
+    '-newkey[Create a new private key and request]:key spec:_openssl_req_newkey_options' \
     '-pkeyopt[Public key option]:key option:' \
     '-key[Key from which private key will be read]:private key file:_files' \
     '-keyform[Format of file specified by -key option]:key format:(DER PEM)' \
