@@ -1,5 +1,6 @@
 #compdef openssl
 
+# _openssl: Start point {{{
 _openssl() {
   setopt nonomatch
   local openssl==openssl
@@ -17,7 +18,9 @@ _openssl() {
     _openssl_commands
   fi
 }
+# }}}
 
+# _get_openssl_commands: Populate arrays of subcommand names {{{
 _get_openssl_commands() {
   if ! (( ${+_openssl_list_cmd_list} )); then
     typeset -ga _openssl_list_cmd_list
@@ -46,7 +49,9 @@ _get_openssl_commands() {
     _openssl_cipher_cmd_list=( $(openssl list-cipher-commands) )
   fi
 }
+# }}}
 
+# _openssl_commands: complete subcommand name  {{{
 _openssl_commands() {
   integer ret=1
   _describe -t cipher-commands 'Cipher command' _openssl_cipher_cmd_list && ret=0
@@ -56,7 +61,9 @@ _openssl_commands() {
 
   return ret
 }
+# }}}
 
+# _openssl_dispatch: Dispatch to completion for subcommand  {{{
 _openssl_dispatch() {
   integer ret=1
   shift words
@@ -74,7 +81,9 @@ _openssl_dispatch() {
 
   return ret
 }
+# }}}
 
+# _openssl_pass_source: Complete password source info {{{
 _openssl_pass_source() {
   _values -S : 'Password source' \
     'pass[Direct password entry]:password:' \
@@ -83,8 +92,9 @@ _openssl_pass_source() {
     'fd[Read password from file descriptor #]:integer:' \
     'stdin[Read password from standard input]'
 }
+# }}}
 
-# Default completion for digest subcommands
+# _openssl_digest_command: Default completion for digest subcommands {{{
 _openssl_digest_command() {
   _arguments : \
     '-c[Print digest in two-digit groups separated by colons]' \
@@ -107,5 +117,8 @@ _openssl_digest_command() {
     '-rand[File for random data]:Random source:_files' \
     '*: :_files'
 }
+#}}}
 
 _openssl "$@"
+
+# vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
