@@ -16,6 +16,18 @@ _openssl() {
 }
 
 _openssl_commands() {
+  if ! (( ${+_openssl_list_cmd_list} )); then
+    typeset -ga _openssl_list_cmd_list
+    _openssl_list_cmd_list=(
+      list-standard-commands
+      list-message-digest-commands
+      list-cipher-commands
+      list-cipher-algorithms
+      list-message-digest-algorithms
+      list-public-key-algorithms
+    )
+  fi
+
   if ! (( ${+_openssl_standard_cmd_list} )); then
     typeset -a _openssl_standard_cmd_list
     _openssl_standard_cmd_list=( $(openssl list-standard-commands) )
@@ -35,6 +47,7 @@ _openssl_commands() {
   _describe -t cipher-commands 'Cipher command' _openssl_cipher_cmd_list && ret=0
   _describe -t digest-commands 'Digest command' _openssl_digest_cmd_list && ret=0
   _describe -t standard-commands 'Standard command' _openssl_standard_cmd_list && ret=0
+  _describe -t list-commands 'List commands' _openssl_list_cmd_list && ret=0
 
   return ret
 }
