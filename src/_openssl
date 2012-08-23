@@ -1,0 +1,42 @@
+#compdef openssl
+
+_openssl() {
+  setopt nonomatch
+  local openssl==openssl
+
+  if [[ $openssl = '=openssl' ]]; then
+    _message "openssl executable not found: completion not available"
+    return
+  fi
+
+  if (( CURRENT > 2 )); then
+  else
+    _openssl_commands
+  fi
+}
+
+_openssl_commands() {
+  if ! (( ${+_openssl_standard_cmd_list} )); then
+    typeset -a _openssl_standard_cmd_list
+    _openssl_standard_cmd_list=( $(openssl list-standard-commands) )
+  fi
+
+  if ! (( ${+_openssl_digest_cmd_list} )); then
+    typeset -a _openssl_digest_cmd_list
+    _openssl_digest_cmd_list=( $(openssl list-message-digest-commands) )
+  fi
+
+  if ! (( ${+_openssl_cipher_cmd_list} )); then
+    typeset -a _openssl_cipher_cmd_list
+    _openssl_cipher_cmd_list=( $(openssl list-cipher-commands) )
+  fi
+
+  integer ret=1
+  _describe -t cipher-commands 'Cipher command' _openssl_cipher_cmd_list && ret=0
+  _describe -t digest-commands 'Digest command' _openssl_digest_cmd_list && ret=0
+  _describe -t standard-commands 'Standard command' _openssl_standard_cmd_list && ret=0
+
+  return ret
+}
+
+_openssl "$@"
