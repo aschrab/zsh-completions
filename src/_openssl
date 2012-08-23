@@ -75,6 +75,15 @@ _openssl_dispatch() {
   return ret
 }
 
+_openssl_pass_source() {
+  _values -S : 'Password source' \
+    'pass[Direct password entry]:password:' \
+    'env[Get password from named environment variable]:environment:_parameters -g "*export*"' \
+    'file[Get password from file]:password file:_files' \
+    'fd[Read password from file descriptor #]:integer:' \
+    'stdin[Read password from standard input]'
+}
+
 # Default completion for digest subcommands
 _openssl_digest_command() {
   _arguments : \
@@ -89,7 +98,7 @@ _openssl_digest_command() {
     '-keyform[Key format]:format:(PEM ENGINE)' \
     '-engine[Use engine ID]:Engine ID:' \
     '-sigopt[Signature options]:Signature option:' \
-    '-passin[Private key password source]:Key source:' \
+    '-passin[Private key password source]:Key source:_openssl_pass_source' \
     '-verify[Verify signature with public key FILE]:Public key file:_files' \
     '-prverify[Verify signature with private key FILE]:Private key file:_files' \
     '-signature[Verify signature in FILE]:Signature file:_files' \
