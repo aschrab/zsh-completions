@@ -83,6 +83,7 @@ _openssl_dispatch() {
 }
 # }}}
 
+# Completion for option arguments {{{
 # _openssl_pass_source: Complete password source info {{{
 _openssl_pass_source() {
   _values -S : 'Password source' \
@@ -93,6 +94,26 @@ _openssl_pass_source() {
     'stdin[Read password from standard input]'
 }
 # }}}
+
+# _openssl_engine_id: Complete engine ID {{{
+_openssl_engine_id() {
+  # TODO
+}
+#}}}
+
+# _openssl_x509_name_options: Complete x509 name options {{{
+_openssl_x509_name_options() {
+  # TODO
+}
+#}}}
+
+# _openssl_x509_cert_options: Complete x509 certificate options {{{
+_openssl_x509_cert_options() {
+  # TODO
+}
+#}}}
+
+#}}}
 
 # _openssl_digest_command: Default completion for digest subcommands {{{
 _openssl_digest_command() {
@@ -106,7 +127,7 @@ _openssl_digest_command() {
     '-out[Filename for output]:output file:_files' \
     '-sign[Sign the digest using key in file]:key file:_files' \
     '-keyform[Key format]:format:(PEM ENGINE)' \
-    '-engine[Use engine ID]:Engine ID:' \
+    '-engine[Use engine ID]:Engine ID:_openssl_engine_id' \
     '-sigopt[Signature options]:Signature option:' \
     '-passin[Private key password source]:Key source:_openssl_pass_source' \
     '-verify[Verify signature with public key FILE]:Public key file:_files' \
@@ -117,6 +138,55 @@ _openssl_digest_command() {
     '-rand[File for random data]:Random source:_files' \
     '*: :_files'
 }
+#}}}
+
+# Completion for specific subcommands {{{
+
+_openssl-req() { #{{{
+  local -a digests
+  digests=(-md5 -sha1) # FIXME generate this
+  _arguments : \
+    $digests \
+    '-inform[Format of the input]:input format:(DER PEM)' \
+    '-outform[Format to use for the output]:output format:(DER PEM)' \
+    '-in[Input filename]:input file:_files' \
+    '-passsin[Source for password of the input]:password source:_openssl_pass_source' \
+    '-out[Output file name]:output file:_files' \
+    '-passsout[Source for password of the output]:password source:_openssl_pass_source' \
+    '-text[Print certificate request in text form]' \
+    '-subject[Print request subject]' \
+    '-pubkey[Output the public key]' \
+    '-noout[Prevent output of encoded request]' \
+    '-modulus[Print the public key modulus]' \
+    '-verify[Verify request signature]' \
+    '-new[Generate a new certificate request]' \
+    '-subj[Specify subject of the request]:subject:' \
+    '-rand[File for random data]:Random source:_files' \
+    '-newkey[Create a new private key and request]:key spec:' \
+    '-pkeyopt[Public key option]:key option:' \
+    '-key[Key from which private key will be read]:private key file:_files' \
+    '-keyform[Format of file specified by -key option]:key format:(DER PEM)' \
+    '-keyout[File name to which generated key should be written]:output key file:_files' \
+    '-nodes[Do not encrypt generated private key]' \
+    '-config[Alternate configuration file]:config file:_files' \
+    '-multivalue-rdn[Interpret -subj argument with support for multivalued RDNs]' \
+    '-x509[Output a self signed certificate]' \
+    '-days[Number of days for which -x509 certifcate will be valid]:integer:' \
+    '-set_serial[Serial number for self-signed certificate]:integer:' \
+    {-extensions,-reqexts}'[]:section:' \
+    '-utf8[Interpret values as UTF8 strings]' \
+    '*-nameopt[Options for display of subject or issuer name]:name option:_openssl_x509_name_options' \
+    '-reqopt[Customise output format for -text]:request option:_openssl_x509_cert_options' \
+    '-asn1-kludge[Produce broken output required by some CAs]' \
+    '-no-asn1-kludge[Produce standard-compliant output]' \
+    '-newhdr[Add NEW to the PEM header and footer]' \
+    '-batch[Non-interactive mode]' \
+    '-verbose[Print extra details]' \
+    '-engine[Use engine ID]:Engine ID:_openssl_engine_id' \
+    '-keygen_engine[Use engine ID for key generation]:Engine ID:_openssl_engine_id'
+}
+#}}}
+
 #}}}
 
 _openssl "$@"
