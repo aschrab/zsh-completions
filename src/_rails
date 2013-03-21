@@ -48,13 +48,44 @@ __rails_dispatch() {
 
 _rails-generate() {
   integer ret=1
+  shift words
+  (( CURRENT-- ))
 
-  if [[ ${+_rails_generator_list} == 0 ]]; then
-    local output="$(_call_program rails_generators 'rails generate --help')"
-    _rails_generator_list=(${${${(M)${(f)${output#*Please choose a generator below.}}:# *}#  }//:/\\:})
+  if (( CURRENT > 1 )); then
+    if (( $+functions[_rails-generate-$words[1]] )); then
+      _call_function ret _rails-generate-$words[1]
+    else
+      _message "No completion for $words[1] generator"
+    fi
+  else
+    if [[ ${+_rails_generator_list} == 0 ]]; then
+      local output="$(_call_program rails_generators 'rails generate --help')"
+      _rails_generator_list=(${${${(M)${(f)${output#*Please choose a generator below.}}:# *}#  }//:/\\:})
+    fi
+    _describe -t rails-generators 'Rails generator' _rails_generator_list && ret=0
+    return ret
   fi
-  _describe -t rails-generators 'Rails generator' _rails_generator_list && ret=0
-  return ret
+}
+
+_rails-generate-model() {
+  _arguments : \
+    '--skip-namespace[Only affects isolated applications]' \
+    '--old-style-hash[Use hash style compatible with Ruby 1.8]' \
+    '(-o --orm)'{-o,--orm=}'[ORM to be used]:ORM: ' \
+    '--migration=[Should a migration be generated]:Boolean:(true false)' \
+    '--timestamps=[Control inclusion of timestamp fields]:Boolean:(true false)' \
+    '--parent=[Parent class for generated model]:Parent model: ' \
+    '--indexes=[Create indexes for references and belongs_to columns]:Boolean:(true false)' \
+    '(-t --test-framework)'{-t,--test-framework=}'[Test framework to use]:Test framework: ' \
+    '--fixture[Control generation of fixture]:Boolean:(true false)' \
+    '(-r --fixture-replacement)'{-r,--fixture-replacement=}'[Fixture replacement to use]:Fixture replacement: ' \
+    '(-f --force)'{-f,--force}'[Overwrite existing files]' \
+    '(-p --pretend)'{-p,--pretend}'[Do not make any changes]' \
+    '(-q --quiet)'{-q,--quiet}'[Suppress status output]' \
+    '(-s --skip)'{-s,--skip}'[Skip files that already exist]' \
+    '1:Model name: ' \
+    '*:Field spec: '
+
 }
 
 # vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
