@@ -39,8 +39,21 @@ __rails_dispatch() {
   shift words
   (( CURRENT-- ))
 
-  if (( $+functions[_rails-$words[1]] )); then
-    _call_function ret _rails-$words[1]
+  typeset -A aliases
+  aliases=(
+    'c'  'console'
+    'd'  'destroy'
+    'db' 'dbconsole'
+    'g'  'generate'
+    'r'  'runner'
+    's'  'server'
+  )
+
+  local command=$words[1]
+  (( $+aliases[$command] )) && command=$aliases[$command]
+
+  if (( $+functions[_rails-$command] )); then
+    _call_function ret _rails-$command
   else
     _message "Can't dispatch to $words[1]"
   fi
