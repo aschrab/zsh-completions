@@ -127,7 +127,7 @@ _rails-generate-model-fieldspec() {
   case "$PREFIX" in
     ?*:?*:*)
       compset -P '*:'
-      compadd -x "Index?" -- index ''
+      compadd -x "Index?" -- index uniq ''
       ;;
     ?*:*)
       compset -S ':*'
