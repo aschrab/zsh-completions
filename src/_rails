@@ -1,0 +1,53 @@
+#compdef rails
+
+_rails() {
+  if (( CURRENT > 2 )); then
+    __rails_dispatch
+  else
+    __rails_commands
+  fi
+}
+
+__rails_commands() {
+  typeset -ga _rails_common_cmd_list
+  _rails_common_cmd_list=(
+    generate
+    console
+    server
+    dbconsole
+    new
+  )
+
+  typeset -ga _rails_other_cmd_list
+  _rails_other_cmd_list=(
+    application
+    destroy
+    benchmarker
+    profiler
+    plugin
+    runner
+  )
+
+  integer ret=1
+  _describe -t rails-common-commands 'Common Rails command' _rails_common_cmd_list && ret=0
+  _describe -t rails-other-commands 'Other Rails command' _rails_other_cmd_list && ret=0
+  return ret
+}
+
+__rails_dispatch() {
+  integer ret=1
+  shift words
+  (( CURRENT-- ))
+
+  if (( $+functions[_rails-$words[1]] )); then
+    _call_function ret _rails-$words[1]
+  else
+    _message "Can't dispatch to $words[1]"
+  fi
+}
+
+_rails-generate() {
+
+}
+
+# vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
