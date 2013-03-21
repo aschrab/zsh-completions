@@ -80,24 +80,31 @@ _rails-generate() {
   fi
 }
 
+__rails_setup_generate_model_arguments() {
+  generate_model_arguments=(
+      '--skip-namespace[Only affects isolated applications]' \
+      '--old-style-hash[Use hash style compatible with Ruby 1.8]' \
+      '(-o --orm)'{-o,--orm=}'[ORM to be used]:ORM: ' \
+      '--migration=[Should a migration be generated]:Boolean:(true false)' \
+      '--timestamps=[Control inclusion of timestamp fields]:Boolean:(true false)' \
+      '--parent=[Parent class for generated model]:Parent model: ' \
+      '--indexes=[Create indexes for references and belongs_to columns]:Boolean:(true false)' \
+      '(-t --test-framework)'{-t,--test-framework=}'[Test framework to use]:Test framework: ' \
+      '--fixture[Control generation of fixture]:Boolean:(true false)' \
+      '(-r --fixture-replacement)'{-r,--fixture-replacement=}'[Fixture replacement to use]:Fixture replacement: ' \
+      '(-f --force)'{-f,--force}'[Overwrite existing files]' \
+      '(-p --pretend)'{-p,--pretend}'[Do not make any changes]' \
+      '(-q --quiet)'{-q,--quiet}'[Suppress status output]' \
+      '(-s --skip)'{-s,--skip}'[Skip files that already exist]' \
+      '1:Model name: ' \
+      '*:Field spec:_rails-generate-model-fieldspec'
+  )
+}
+
 _rails-generate-model() {
-  _arguments : \
-    '--skip-namespace[Only affects isolated applications]' \
-    '--old-style-hash[Use hash style compatible with Ruby 1.8]' \
-    '(-o --orm)'{-o,--orm=}'[ORM to be used]:ORM: ' \
-    '--migration=[Should a migration be generated]:Boolean:(true false)' \
-    '--timestamps=[Control inclusion of timestamp fields]:Boolean:(true false)' \
-    '--parent=[Parent class for generated model]:Parent model: ' \
-    '--indexes=[Create indexes for references and belongs_to columns]:Boolean:(true false)' \
-    '(-t --test-framework)'{-t,--test-framework=}'[Test framework to use]:Test framework: ' \
-    '--fixture[Control generation of fixture]:Boolean:(true false)' \
-    '(-r --fixture-replacement)'{-r,--fixture-replacement=}'[Fixture replacement to use]:Fixture replacement: ' \
-    '(-f --force)'{-f,--force}'[Overwrite existing files]' \
-    '(-p --pretend)'{-p,--pretend}'[Do not make any changes]' \
-    '(-q --quiet)'{-q,--quiet}'[Suppress status output]' \
-    '(-s --skip)'{-s,--skip}'[Skip files that already exist]' \
-    '1:Model name: ' \
-    '*:Field spec:_rails-generate-model-fieldspec'
+  local -a generate_model_arguments
+  __rails_setup_generate_model_arguments
+  _arguments : ${generate_model_arguments}
 }
 
 _rails-generate-model-fieldspec() {
@@ -131,6 +138,19 @@ _rails-generate-model-fieldspec() {
       _message "Field name"
       ;;
   esac
+}
+
+_rails-generate-scaffold() {
+  local -a generate_model_arguments
+  __rails_setup_generate_model_arguments
+
+  _arguments : ${generate_model_arguments} \
+    '--force-plural[Force use of plural ModelName]' \
+    '--resource-route[Control use of resource routes]:Boolean:(true false)' \
+    '(-se --stylesheet-engine)'{-se,--stylesheet-engine=}'[Stylesheet engine to use]:Stylesheet engine: ' \
+    '(-y --stylesheets)'{-y,--stylesheets}'[Control generation of stylesheets]:Boolean:(true false)' \
+    '(-c --scaffold-controller)'{-c,--scaffold-controller=}'[Scaffold controller to be invoked]:Controller: ' \
+    '--assets[Control generation of assets]:Boolean:(true false)'
 }
 
 # vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
