@@ -84,8 +84,40 @@ _rails-generate-model() {
     '(-q --quiet)'{-q,--quiet}'[Suppress status output]' \
     '(-s --skip)'{-s,--skip}'[Skip files that already exist]' \
     '1:Model name: ' \
-    '*:Field spec: '
+    '*:Field spec:_rails-generate-model-fieldspec'
+}
 
+_rails-generate-model-fieldspec() {
+  typeset -a field_types
+  field_types=(
+    'binary'
+    'boolean'
+    'date'
+    'datetime'
+    'decimal'
+    'float'
+    'integer'
+    'primary_key'
+    'string'
+    'text'
+    'time'
+    'timestamp'
+  )
+
+  case "$PREFIX" in
+    ?*:?*:*)
+      compset -P '*:'
+      compadd -x "Index?" -- index ''
+      ;;
+    ?*:*)
+      compset -S ':*'
+      compset -P '*:'
+      compadd -x 'Field type'  -S : -q -a -- field_types
+      ;;
+    *)
+      _message "Field name"
+      ;;
+  esac
 }
 
 # vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
