@@ -153,4 +153,16 @@ _rails-generate-scaffold() {
     '--assets[Control generation of assets]:Boolean:(true false)'
 }
 
+_rails-server() {
+  _arguments \
+    '(-p --port)'{-p,--port=}'[Port to use]:Port: ' \
+    '(-b --binding)'{-b,--binding=}'[Bind to specified IP address]:IP address: ' \
+    '(-c --config)'{-c,--config=}'[Use custom rack config file]:File:_path_files' \
+    '(-d --daemon)'{-d,--daemon}'[Run server as a daemon]' \
+    '(-u --debugger)'{-u,--debugger}'[Enable ruby debugging]' \
+    '(-e --environment)'{-e,--environment=}'[Environment to use]:Environment:(development test production)' \
+    '(-P --pid)'{-P,--pid=}'[PID file location]:PID file:_path_files' \
+    '(-h --help)'{-h,--help}'[Display help message]'
+}
+
 # vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
