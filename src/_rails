@@ -160,9 +160,15 @@ _rails-server() {
     '(-c --config)'{-c,--config=}'[Use custom rack config file]:File:_path_files' \
     '(-d --daemon)'{-d,--daemon}'[Run server as a daemon]' \
     '(-u --debugger)'{-u,--debugger}'[Enable ruby debugging]' \
-    '(-e --environment)'{-e,--environment=}'[Environment to use]:Environment:(development test production)' \
+    '(-e --environment)'{-e,--environment=}'[Environment to use]:Environment:__rails-environment' \
     '(-P --pid)'{-P,--pid=}'[PID file location]:PID file:_path_files' \
     '(-h --help)'{-h,--help}'[Display help message]'
+}
+
+__rails-environment() {
+  local -a environments
+  environments=( config/environments/*.rb )
+  _values 'Environment' ${${environments##*/}%*.rb}
 }
 
 # vim: filetype=zsh expandtab shiftwidth=2 foldmethod=marker
